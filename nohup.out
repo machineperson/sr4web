@@ -1,0 +1,42 @@
+
+Error: Value of HTTP_CONTENT_LENGTH or CONTENT_LENGTH is not an integer!
+
+	Call history:
+
+	loop179	  
+	src/sr4web.scm:27: out	  
+	loop179	  
+	src/sr4web.scm:28: out	  
+	loop179	  
+	src/sr4web.scm:31: fastcgi#fcgi-get-post-data	  
+	env330	  
+	fastcgi#fcgx-get-param	  
+	##sys#make-c-string	  
+	##sys#peek-c-string	  
+	env330	  
+	fastcgi#fcgx-get-param	  
+	##sys#make-c-string	  
+	##sys#peek-c-string	  
+	make-property-condition	  
+	abort	  	<--
+
+Error: Value of HTTP_CONTENT_LENGTH or CONTENT_LENGTH is not an integer!
+
+	Call history:
+
+	loop179	  
+	src/sr4web.scm:27: out	  
+	loop179	  
+	src/sr4web.scm:28: out	  
+	loop179	  
+	src/sr4web.scm:31: fastcgi#fcgi-get-post-data	  
+	env330	  
+	fastcgi#fcgx-get-param	  
+	##sys#make-c-string	  
+	##sys#peek-c-string	  
+	env330	  
+	fastcgi#fcgx-get-param	  
+	##sys#make-c-string	  
+	##sys#peek-c-string	  
+	make-property-condition	  
+	abort	  	<--

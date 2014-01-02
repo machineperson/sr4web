@@ -1,0 +1,56 @@
+html
+{
+background-color:#023c4a;
+}
+
+body
+{
+background-color:rgba(255, 255, 255, 0.8);
+font-family: Verdana, Helvetica, sans-serif;
+padding:1em;
+}
+
+h1, h2
+{
+}
+
+h1
+{
+background: rbga(255, 255, 255, 0.8);
+margin-top: 0;
+}
+
+table, th, td
+{
+ border: 1 px solid #00161b;
+}
+
+th
+{
+text-align: left;
+}
+
+td
+{
+text-align: left;
+}
+
+a
+{
+color:#0C262C;
+}
+
+a:visited
+{
+color:#00161b;
+}
+
+a:hover
+{
+color:#b5b5b5;
+}
+
+.buttons
+{
+display:inline;
+}

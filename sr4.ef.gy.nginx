@@ -1,0 +1,160 @@
+# This is the configuration file for http://sr4.ef.gy/
+# Evidently, this server is running nginx with the native XSLT processor.
+
+server {
+    listen [::]:80;
+
+        server_name  sr4.ef.gy;
+
+        access_log  /var/log/nginx/sr4.ef.gy.access.log;
+
+        xslt_types application/xhtml+xml image/svg+xml;
+
+        root /srv/http/sr4.ef.gy;
+
+	if ($request_uri ~ ^/x?html/ )
+	{
+		rewrite ^/x?html/(.*)$ /$1 permanent;
+	}
+
+        location / {
+                add_header Vary Accept;
+
+                if ($uri ~ ^/(\.git|robots|favicon))
+                {
+                    break;
+                }
+
+                if ($http_accept ~* application/xhtml\+xml)
+                {
+                        rewrite ^(.*)$ /xhtml$1 last;
+                }
+
+                rewrite ^(.*)$ /html$1 last;
+        }
+
+        location /.git {
+        error_page 403 /source-code;
+        }
+
+        location /css {
+                try_files $uri.css $uri =404;
+        }
+
+        location /js {
+                try_files $uri.js $uri =404;
+        }
+
+        location /svg {
+                alias /srv/http/sr4.ef.gy;
+                try_files $uri.xml $uri.svg $uri $uri.cache.xml =404;
+
+                xslt_stylesheet /srv/http/sr4.ef.gy/xslt/svg-style-sr4.ef.gy.xslt;
+        }
+
+        location /xhtml {
+                alias /srv/http/sr4.ef.gy;
+                try_files $uri.xml $uri.xhtml $uri $uri.cache.xml /xhtml/sr4?$args;
+
+                xslt_stylesheet /srv/http/sr4.ef.gy/xslt/xhtml-style-sr4.ef.gy.xslt;
+        }
+
+        location /html {
+                alias /srv/http/sr4.ef.gy;
+                try_files $uri.xml $uri.xhtml $uri $uri.cache.xml /html/sr4?$args;
+
+                xslt_stylesheet /srv/http/sr4.ef.gy/xslt/xhtml-style-sr4.ef.gy.xslt;
+                xslt_stylesheet /srv/http/sr4.ef.gy/xslt/html-post-process.xslt;
+        }
+
+        location /xhtml/sr4 {
+		gzip off;
+		root /srv/http/sr4.ef.gy;
+		fastcgi_pass   unix:/var/run/fcgiwrap.socket;
+		fastcgi_param  SCRIPT_FILENAME  /srv/http/sr4.ef.gy/sr4web;
+		fastcgi_param  QUERY_STRING     $query_string;
+		fastcgi_param  REQUEST_METHOD   $request_method;
+		fastcgi_param  CONTENT_TYPE     $content_type;
+		fastcgi_param  CONTENT_LENGTH   $content_length;
+		fastcgi_param  REQUEST_URI      $request_uri;
+		# page
+		fastcgi_param  NGX_ARG_PAGE     $arg_page;
+		# user name
+		fastcgi_param  NGX_ARG_USER     $arg_user;
+		# character name
+               	fastcgi_param  NGX_ARG_CNAME    $arg_cname;
+                # character description
+		fastcgi_param  NGX_ARG_CDESC    $arg_cdesc;
+		fastcgi_param  NGX_ARG_CID      $arg_cid;
+		fastcgi_param  NGX_ARG_METATYPE $arg_metatype;
+		fastcgi_param  NGX_ARG_BP       $arg_bp;
+		#total karma
+		fastcgi_param  NGX_ARG_TKARMA   $arg_tkarma;
+		fastcgi_param  NGX_ARG_CKARMA   $arg_ckarma;
+		fastcgi_param  NGX_ARG_NLANG    $arg_nlang;
+
+		fastcgi_param  NGX_ARG_ATTR     $arg_attr;
+		fastcgi_param  NGX_ARG_ATTVALUE $arg_attvalue;
+		fastcgi_param  NGX_ARG_DO	$arg_do;
+
+		fastcgi_param  NGX_ARG_SKILL	$arg_skill;
+		fastcgi_param  NGX_ARG_SVALUE   $arg_svalue;
+		fastcgi_param  NGX_ARG_SDO      $arg_sdo;
+		fastcgi_param  NGX_ARG_ISGROUP  $arg_isgroup;
+
+		fastcgi_param  NGX_ARG_QUALITY  $arg_quality;
+		fastcgi_param  NGX_ARG_QDESC    $arg_qdesc;
+
+		fastcgi_param  NGX_ARG_HASH     $arg_hash;
+		fastcgi_param  NGX_ARG_ADMIN    $arg_admin;
+
+                xslt_stylesheet /srv/http/sr4.ef.gy/xslt/xhtml-style-sr4.ef.gy.xslt;
+        }
+
+        location /html/sr4 {
+		gzip off;
+		root /srv/http/sr4.ef.gy;
+		fastcgi_pass   unix:/var/run/fcgiwrap.socket;
+		fastcgi_param  SCRIPT_FILENAME  /srv/http/sr4.ef.gy/sr4web;
+		fastcgi_param  QUERY_STRING     $query_string;
+		fastcgi_param  REQUEST_METHOD   $request_method;
+		fastcgi_param  CONTENT_TYPE     $content_type;
+		fastcgi_param  CONTENT_LENGTH   $content_length;
+		fastcgi_param  REQUEST_URI      $request_uri;
+
+		fastcgi_param  NGX_ARG_USER     $arg_user;
+		fastcgi_param  NGX_ARG_PAGE     $arg_page;
+               	fastcgi_param  NGX_ARG_CNAME    $arg_cname;
+		fastcgi_param  NGX_ARG_CDESC    $arg_cdesc;
+		fastcgi_param  NGX_ARG_CID      $arg_cid;
+		fastcgi_param  NGX_ARG_METATYPE $arg_metatype;
+		fastcgi_param  NGX_ARG_BP       $arg_bp;
+		#total karma
+		fastcgi_param  NGX_ARG_TKARMA   $arg_tkarma;
+		#current karma
+		fastcgi_param  NGX_ARG_CKARMA   $arg_ckarma;
+		fastcgi_param  NGX_ARG_NLANG    $arg_nlang;
+
+		fastcgi_param  NGX_ARG_ATTR     $arg_attr;
+		fastcgi_param  NGX_ARG_ATTVALUE $arg_attvalue;
+		fastcgi_param  NGX_ARG_DO	$arg_do;
+
+		fastcgi_param  NGX_ARG_SKILL	$arg_skill;
+		fastcgi_param  NGX_ARG_SVALUE   $arg_svalue;
+		fastcgi_param  NGX_ARG_SDO      $arg_sdo;
+		fastcgi_param  NGX_ARG_ISGROUP  $arg_isgroup;
+
+
+
+		fastcgi_param  NGX_ARG_QUALITY  $arg_quality;
+		fastcgi_param  NGX_ARG_QDESC    $arg_qdesc;
+
+
+		fastcgi_param  NGX_ARG_HASH     $arg_hash;
+		fastcgi_param  NGX_ARG_ADMIN    $arg_admin;		
+
+                xslt_stylesheet /srv/http/sr4.ef.gy/xslt/xhtml-style-sr4.ef.gy.xslt;
+                xslt_stylesheet /srv/http/sr4.ef.gy/xslt/html-post-process.xslt;
+        }
+}
+
